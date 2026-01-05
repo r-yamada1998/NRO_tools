@@ -256,8 +256,8 @@ def add_pointing_axes_outside(
     *,
     agg: Literal["median", "mean"] = "median",
     pad: float = 0.04,
-    daz_height: float = 0.18,
-    del_width: float = 0.20,
+    daz_height: float = 0.05,
+    del_width: float = 0.05,
     del_gap_extra: float = 0.06,
     daz_gap_extra: float = 0.06,
 ) -> Dict[str, plt.Axes]:
