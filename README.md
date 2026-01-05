@@ -6,7 +6,7 @@ Tools for the CSV observations of the NRO-45m telescope
 
 ### load nqm data
 
-```
+```python
 from nro_tools.io import load_scans
 from nro_tools import calibrate
 import xarray as xr
@@ -19,7 +19,7 @@ cal.ds["v_los"]      # (time, array, chan)
 cal.meta["performed"]  # ('intensity','frequency','velocity')
 ```
 ### pointing analysis
-```
+```python
 from nro_tools.visualize.cross_point import plot_cross_pointing, add_pointing_axes_outside
 
 ranges = ((-200, -100), (100, 200))  # emission-free ranges (速度軸の例)
