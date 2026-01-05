@@ -1,0 +1,29 @@
+[project]
+name = "nro-tools"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "astropy>=7.2.0",
+    "jupyter>=1.1.1",
+    "matplotlib>=3.10.8",
+    "numpy>=2.4.0",
+    "pandas>=2.3.3",
+    "scipy>=1.16.3",
+    "xarray>=2025.12.0",
+]
+
+[project.scripts]
+nro-tools = "nro_tools:main"
+
+[build-system]
+requires = ["uv_build>=0.9.21,<0.10.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "black>=25.12.0",
+    "jupyter>=1.1.1",
+    "pytest>=9.0.2",
+]

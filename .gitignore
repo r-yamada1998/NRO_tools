@@ -4,3 +4,9 @@
 
 # Mac OS
 .DS_Store
+
+# data
+data/
+plog/
+figures/
+results/
