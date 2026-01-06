@@ -86,7 +86,8 @@ def plot_cross_pointing(
     figsize: Tuple[float, float] = (10, 10),
 ) -> Tuple[plt.Figure, np.ndarray, pd.DataFrame, xr.Dataset]:
     """
-    Plot 5-point cross spectra (ON only) for a chosen array, with optional gated Gaussian fitting.
+    Plot 5-point cross spectra (ON only) for a chosen array,
+    with optional gated Gaussian fitting.
 
     Cross layout:
       horizontal: left=-DAZ, center=0, right=+DAZ

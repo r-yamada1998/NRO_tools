@@ -2,10 +2,9 @@ from __future__ import annotations
 
 from pathlib import Path
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Literal, Optional, Sequence, Tuple
+from typing import Any, Dict, List, Literal, Optional, Tuple
 
 import xarray as xr
-import numpy as np
 
 
 @dataclass(frozen=True, slots=True)
