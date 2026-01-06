@@ -196,6 +196,16 @@ def plot_cross_pointing(
                     lo2, hi2 = (lo, hi) if lo <= hi else (hi, lo)
                     ax.axvspan(lo2, hi2, alpha=0.08)
 
+            def _get_scalar(name: str):
+                if name in dsi:
+                    v = dsi[name].values
+                    # 0-d array -> python scalar
+                    try:
+                        return float(v) if np.asarray(v).dtype.kind in "iuf" else str(v)
+                    except Exception:
+                        return np.asarray(v).item()
+                return None
+
             rec = {
                 "panel_row": r,
                 "panel_col": c,
@@ -203,6 +213,17 @@ def plot_cross_pointing(
                 "time": np.datetime_as_string(dsi["time"].values),
                 "DAZ": float(dz0),
                 "DEL": float(de0),
+                # --- absolute coordinates at acquisition time ---
+                "az": _get_scalar("AZ"),
+                "el": _get_scalar("EL"),
+                "PAZ": _get_scalar("PAZ"),
+                "PEL": _get_scalar("PEL"),
+                "RAZ": _get_scalar("RAZ"),
+                "REL": _get_scalar("REL"),
+                "RA": _get_scalar("RA"),
+                "DEC": _get_scalar("DEC"),
+                "GL": _get_scalar("GL"),
+                "GB": _get_scalar("GB"),
             }
 
             if fit_res is None:

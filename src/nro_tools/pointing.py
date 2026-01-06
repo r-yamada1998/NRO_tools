@@ -299,4 +299,10 @@ def estimate_pointing_offset(
         )
         del_fit = _fit_gaussian_1d(x_del, y_amp, axis="DEL")
 
-    return PointingResult(summary=summary, daz_fit=daz_fit, del_fit=del_fit)
+    return PointingResult(
+        summary=summary,
+        az=df_fit["az"].mean(),
+        el=df_fit["el"].mean(),
+        daz_fit=daz_fit,
+        del_fit=del_fit,
+    )
