@@ -198,7 +198,7 @@ def panel_name(panel_row: int, panel_col: int) -> Optional[str]:
 def summarize_panel_amplitudes(
     df_fit: pd.DataFrame,
     *,
-    agg: Literal["median", "mean"] = "median",
+    agg: Literal["median", "mean", "last"] = "median",
 ) -> PanelAmplitudeSummary:
     """
     Summarize detections per panel into representative amp and representative DAZ/DEL.
@@ -207,6 +207,7 @@ def summarize_panel_amplitudes(
       - panel_row, panel_col
       - amp (for detections)
       - DAZ, DEL
+      - time (for agg="last")
     """
     det = df_fit[df_fit["status"] == "detection"].copy()
     if det.empty:
@@ -223,12 +224,31 @@ def summarize_panel_amplitudes(
         amp = g["amp"].median()
         daz = g["DAZ"].median()
         dele = g["DEL"].median()
+
     elif agg == "mean":
         amp = g["amp"].mean()
         daz = g["DAZ"].mean()
         dele = g["DEL"].mean()
+
+    elif agg == "last":
+        # 各panelで time が最大の「行index」を取得（index=panel の Series）
+        idx = g["time"].idxmax()
+
+        # det の該当行を取り、panel を index に揃える（index=panel になる）
+        last_rows = det.loc[idx.to_numpy()].copy()
+        last_rows.index = idx.index  # <- ここがポイント（panelをindexにする）
+
+        amp = last_rows["amp"]
+        daz = last_rows["DAZ"]
+        dele = last_rows["DEL"]
+
+        # （任意）名前も median/mean と同じにしておくとより揃います
+        amp.name = "amp"
+        daz.name = "DAZ"
+        dele.name = "DEL"
+
     else:
-        raise ValueError("agg must be 'median' or 'mean'")
+        raise ValueError("agg must be 'median', 'mean', or 'last'")
 
     return PanelAmplitudeSummary(
         amp=amp.to_dict(),
@@ -264,7 +284,7 @@ def _fit_gaussian_1d(
 def estimate_pointing_offset(
     df_fit: pd.DataFrame,
     *,
-    agg: Literal["median", "mean"] = "median",
+    agg: Literal["median", "mean", "last"] = "median",
 ) -> PointingResult:
     """
     Fit amplitude vs DAZ and amplitude vs DEL from the 5-point cross.
@@ -274,7 +294,7 @@ def estimate_pointing_offset(
 
     daz_fit = None
     del_fit = None
-
+    print(summary)
     # DAZ: (-DAZ, 0, +DAZ)
     if all(k in summary.amp for k in ("-DAZ", "0", "+DAZ")) and all(
         k in summary.daz for k in ("-DAZ", "0", "+DAZ")
@@ -299,4 +319,10 @@ def estimate_pointing_offset(
         )
         del_fit = _fit_gaussian_1d(x_del, y_amp, axis="DEL")
 
-    return PointingResult(summary=summary, daz_fit=daz_fit, del_fit=del_fit)
+    return PointingResult(
+        summary=summary,
+        az=df_fit["az"].mean(),
+        el=df_fit["el"].mean(),
+        daz_fit=daz_fit,
+        del_fit=del_fit,
+    )

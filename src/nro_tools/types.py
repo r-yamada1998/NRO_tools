@@ -120,5 +120,7 @@ class PointingResult:
     """
 
     summary: PanelAmplitudeSummary
+    az: float
+    el: float
     daz_fit: Optional[Pointing1DFitResult] = None
     del_fit: Optional[Pointing1DFitResult] = None
