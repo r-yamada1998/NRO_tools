@@ -276,7 +276,7 @@ def add_pointing_axes_outside(
     axes_3x3: np.ndarray,
     df_fit: pd.DataFrame,
     *,
-    agg: Literal["median", "mean"] = "median",
+    agg: Literal["median", "mean", "last"] = "median",
     pad: float = 0.04,
     daz_height: float = 0.05,
     del_width: float = 0.05,
