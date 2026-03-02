@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Literal, Optional, Tuple
-
+from datetime import datetime
 import xarray as xr
 
 
@@ -99,6 +99,7 @@ class PanelAmplitudeSummary:
     Keys: "-DAZ", "0", "+DAZ", "+DEL", "-DEL" (subset if missing)
     """
 
+    date: datetime
     amp: Dict[str, float] = field(default_factory=dict)
     daz: Dict[str, float] = field(default_factory=dict)
     dele: Dict[str, float] = field(default_factory=dict)
