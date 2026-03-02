@@ -221,13 +221,17 @@ def summarize_panel_amplitudes(
     g = det.groupby("panel", sort=False)
 
     if agg == "median":
-        date = g["time"].median()
+        s = g["time"].median()
+        s = pd.to_datetime(s)
+        date = {k: v.to_pydatetime() for k, v in s.items()}
         amp = g["amp"].median()
         daz = g["DAZ"].median()
         dele = g["DEL"].median()
 
     elif agg == "mean":
-        date = g["time"].mean()
+        s = g["time"].median()
+        s = pd.to_datetime(s)
+        date = {k: v.to_pydatetime() for k, v in s.items()}
         amp = g["amp"].mean()
         daz = g["DAZ"].mean()
         dele = g["DEL"].mean()
@@ -245,16 +249,18 @@ def summarize_panel_amplitudes(
         dele = last_rows["DEL"]
 
         # （任意）名前も median/mean と同じにしておくとより揃います
-        date = g["time"].max()
+        s = g["time"].max()
+        s = pd.to_datetime(s)
+        date = {k: v.to_pydatetime() for k, v in s.items()}
         amp.name = "amp"
         daz.name = "DAZ"
         dele.name = "DEL"
 
     else:
         raise ValueError("agg must be 'median', 'mean', or 'last'")
-
+    print(date)
     return PanelAmplitudeSummary(
-        date=date.to_dict(),
+        date=date,
         amp=amp.to_dict(),
         daz=daz.to_dict(),
         dele=dele.to_dict(),
