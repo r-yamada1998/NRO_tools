@@ -211,7 +211,7 @@ def summarize_panel_amplitudes(
     """
     det = df_fit[df_fit["status"] == "detection"].copy()
     if det.empty:
-        return PanelAmplitudeSummary(amp={}, daz={}, dele={}, agg=agg)
+        return PanelAmplitudeSummary(date=None, amp={}, daz={}, dele={}, agg=agg)
 
     det["panel"] = [
         panel_name(int(r), int(c)) for r, c in zip(det["panel_row"], det["panel_col"])
@@ -221,11 +221,17 @@ def summarize_panel_amplitudes(
     g = det.groupby("panel", sort=False)
 
     if agg == "median":
+        s = g["time"].median()
+        s = pd.to_datetime(s)
+        date = {k: v.to_pydatetime() for k, v in s.items()}
         amp = g["amp"].median()
         daz = g["DAZ"].median()
         dele = g["DEL"].median()
 
     elif agg == "mean":
+        s = g["time"].median()
+        s = pd.to_datetime(s)
+        date = {k: v.to_pydatetime() for k, v in s.items()}
         amp = g["amp"].mean()
         daz = g["DAZ"].mean()
         dele = g["DEL"].mean()
@@ -243,14 +249,18 @@ def summarize_panel_amplitudes(
         dele = last_rows["DEL"]
 
         # （任意）名前も median/mean と同じにしておくとより揃います
+        s = g["time"].max()
+        s = pd.to_datetime(s)
+        date = {k: v.to_pydatetime() for k, v in s.items()}
         amp.name = "amp"
         daz.name = "DAZ"
         dele.name = "DEL"
 
     else:
         raise ValueError("agg must be 'median', 'mean', or 'last'")
-
+    print(date)
     return PanelAmplitudeSummary(
+        date=date,
         amp=amp.to_dict(),
         daz=daz.to_dict(),
         dele=dele.to_dict(),
