@@ -210,7 +210,7 @@ def plot_cross_pointing(
                 "panel_row": r,
                 "panel_col": c,
                 "panel": panel_name(r, c),
-                "time": np.datetime_as_string(dsi["time"].values),
+                "time": dsi["time"].values,
                 "DAZ": float(dz0),
                 "DEL": float(de0),
                 # --- absolute coordinates at acquisition time ---
@@ -293,7 +293,6 @@ def add_pointing_axes_outside(
       - Ensure your figure has enough margin; increase figsize if needed.
     """
     pr: PointingResult = estimate_pointing_offset(df_fit, agg=agg)
-
     # cross bbox from 5 axes
     used = [
         axes_3x3[1, 0],
