@@ -207,7 +207,7 @@ def summarize_panel_amplitudes(
       - panel_row, panel_col
       - amp (for detections)
       - DAZ, DEL
-      - time (for agg="last")
+      - time
     """
     det = df_fit[df_fit["status"] == "detection"].copy()
     if det.empty:
@@ -221,17 +221,13 @@ def summarize_panel_amplitudes(
     g = det.groupby("panel", sort=False)
 
     if agg == "median":
-        s = g["time"].median()
-        s = pd.to_datetime(s)
-        date = {k: v.to_pydatetime() for k, v in s.items()}
+        date = g["time"].mean()
         amp = g["amp"].median()
         daz = g["DAZ"].median()
         dele = g["DEL"].median()
 
     elif agg == "mean":
-        s = g["time"].median()
-        s = pd.to_datetime(s)
-        date = {k: v.to_pydatetime() for k, v in s.items()}
+        date = g["time"].mean()
         amp = g["amp"].mean()
         daz = g["DAZ"].mean()
         dele = g["DEL"].mean()
@@ -258,7 +254,6 @@ def summarize_panel_amplitudes(
 
     else:
         raise ValueError("agg must be 'median', 'mean', or 'last'")
-    print(date)
     return PanelAmplitudeSummary(
         date=date,
         amp=amp.to_dict(),
@@ -304,7 +299,6 @@ def estimate_pointing_offset(
 
     daz_fit = None
     del_fit = None
-    print(summary)
     # DAZ: (-DAZ, 0, +DAZ)
     if all(k in summary.amp for k in ("-DAZ", "0", "+DAZ")) and all(
         k in summary.daz for k in ("-DAZ", "0", "+DAZ")
